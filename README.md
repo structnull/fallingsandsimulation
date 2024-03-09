@@ -19,7 +19,7 @@ To build and run the Falling Sand Simulator, follow these steps:
 
 2. **Navigate to the Project Directory:**
    ```bash
-   cd fallingsandsimulator
+   cd fallingsandsimulation
    ```
 
 3. **Compile the Code:**
