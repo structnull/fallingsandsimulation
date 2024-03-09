@@ -32,38 +32,39 @@ void drawGrid()
 		}
 	}
 
-	for (int i = 0; i < rows; i++) 
+	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
 		{
 			int state = grid[i][j];
 			if (state == 1)
 			{
-				// Check if we are not at the last row(fixed out of bounds )
+				// Check if we are not at the last row
 				if (i < rows - 1)
 				{
-					// Check below
-					if (grid[i + 1][j] == 0)
+					// Check if we are not at the last column
+					if (j < cols - 1)
 					{
-						nextgrid[i][j] = 0;
-						nextgrid[i + 1][j] = 1;
-					}
-					// Check below right(huh?)
-					else if (j < cols - 1 && grid[i + 1][j + 1] == 0)
-					{
-						nextgrid[i][j + 1] = 1;
-					}
-					// Check below left
-					else if (j > 0 && grid[i + 1][j - 1] == 0)
-					{
-						nextgrid[i][j - 1] = 1;
+						int belowA = grid[i + 1][j + 1];
+						int belowB = grid[i + 1][j - 1];
+						if (grid[i + 1][j] == 0)
+						{
+							nextgrid[i][j] = 0;
+							nextgrid[i + 1][j] = 1;
+						}
+						else if (belowA == 0)
+						{
+							nextgrid[i][j + 1] = 1;
+						}
+						else if (belowB == 0)
+						{
+							nextgrid[i][j - 1] = 1;
+						}
 					}
 				}
 			}
 		}
-	} 
-
-
+	}
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
