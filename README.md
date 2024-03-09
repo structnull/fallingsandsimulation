@@ -14,7 +14,7 @@ To build and run the Falling Sand Simulator, follow these steps:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/chiefdinkan/fallingsandsimulator.git
+   git clone https://github.com/chiefdinkan/fallingsandsimulation.git
    ```
 
 2. **Navigate to the Project Directory:**
