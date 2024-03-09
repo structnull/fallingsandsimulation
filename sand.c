@@ -68,6 +68,17 @@ void drawGrid()
 	}
 }
 
+void handleMouseInput() {
+	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+		Vector2 mousePosition = GetMousePosition();
+		int gridX = mousePosition.x / cellSize;
+		int gridY = mousePosition.y / cellSize;
+		if (gridX >= 0 && gridX < cols && gridY >= 0 && gridY < rows) {
+			grid[gridY][gridX] = 1;
+		}
+	}
+}
+
 int main()
 {
 	InitWindow(sWidth, sHeight, "Falling sand simulator");
@@ -75,12 +86,11 @@ int main()
 
 	initializeGrid();
 
-	grid[10][20] = 1;
-
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
+		handleMouseInput();
 		drawGrid();
 		EndDrawing();
 	}
