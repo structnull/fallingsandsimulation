@@ -3,10 +3,10 @@
 This is a simple Falling Sand Simulator built using C and the Raylib library.
 
 ## Todo
-[] add more sophicated interaction between particles.
-[] add real physics interaction.
-[] add more physical object types.
-[] 
+- [] add more sophicated interaction between particles.
+- [] add real physics interaction.
+- [] add more physical object types.
+- [] 
 
 ## How to Build
 
