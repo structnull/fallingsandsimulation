@@ -10,7 +10,8 @@
 int grid[rows][cols];
 int nextgrid[rows][cols];
 
-void initializeGrid() {
+void initializeGrid()
+{
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
@@ -31,21 +32,37 @@ void drawGrid()
 		}
 	}
 
-	for (int i = 0; i < rows; i++)
+	for (int i = 0; i < rows; i++) 
 	{
 		for (int j = 0; j < cols; j++)
 		{
 			int state = grid[i][j];
 			if (state == 1)
 			{
-				if (i < rows - 1 && grid[i + 1][j] == 0) 
+				// Check if we are not at the last row(fixed out of bounds )
+				if (i < rows - 1)
 				{
-					nextgrid[i][j] = 0;
-					nextgrid[i + 1][j] = 1; 
+					// Check below
+					if (grid[i + 1][j] == 0)
+					{
+						nextgrid[i][j] = 0;
+						nextgrid[i + 1][j] = 1;
+					}
+					// Check below right(huh?)
+					else if (j < cols - 1 && grid[i + 1][j + 1] == 0)
+					{
+						nextgrid[i][j + 1] = 1;
+					}
+					// Check below left
+					else if (j > 0 && grid[i + 1][j - 1] == 0)
+					{
+						nextgrid[i][j - 1] = 1;
+					}
 				}
 			}
 		}
-	}
+	} 
+
 
 	for (int i = 0; i < rows; i++)
 	{
@@ -68,12 +85,15 @@ void drawGrid()
 	}
 }
 
-void handleMouseInput() {
-	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+void handleMouseInput()
+{
+	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+	{
 		Vector2 mousePosition = GetMousePosition();
 		int gridX = mousePosition.x / cellSize;
 		int gridY = mousePosition.y / cellSize;
-		if (gridX >= 0 && gridX < cols && gridY >= 0 && gridY < rows) {
+		if (gridX >= 0 && gridX < cols && gridY >= 0 && gridY < rows)
+		{
 			grid[gridY][gridX] = 1;
 		}
 	}
