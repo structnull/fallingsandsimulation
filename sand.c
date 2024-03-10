@@ -3,7 +3,7 @@
 
 #define sWidth 800
 #define sHeight 800
-#define cellSize 10
+#define cellSize 3
 
 #define rows (sHeight / cellSize)
 #define cols (sWidth / cellSize)
@@ -111,7 +111,7 @@ int main()
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
-		ClearBackground(RAYWHITE);
+		ClearBackground(BLACK);
 		handleMouseInput();
 		drawGrid();
 		EndDrawing();
