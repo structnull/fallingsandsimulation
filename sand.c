@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <stdlib.h>
 
 #define sWidth 800
 #define sHeight 800
@@ -32,28 +33,34 @@ void drawGrid()
 			int state = grid[i][j];
 			if (state == 1)
 			{
-				// Check if we are not at the last row
-				if (i < rows - 1)
+				// Initialize belowA and belowB
+				int belowA = 0, belowB = 0;
+				int r = 1;
+				if (rand() % 100 + 1 < 50)
 				{
-					// Check if we are not at the last column
-					if (j < cols - 1)
-					{
-						int belowA = grid[i + 1][j + 1];
-						int belowB = grid[i + 1][j - 1];
-						if (grid[i + 1][j] == 0)
-						{
-							nextgrid[i][j] = 0;
-							nextgrid[i + 1][j] = 1;
-						}
-						else if (belowA == 0)
-						{
-							nextgrid[i + 1][j + 1] = 1;
-						}
-						else if (belowB == 0)
-						{
-							nextgrid[i + 1][j - 1] = 1;
-						}
-					}
+					r *= -1;
+				}
+				if (i + r >= 0 && i + r <= rows - 1 && j + 1 < cols)
+				{
+					belowA = grid[i + r][j + 1];
+				}
+				if (i + r >= 0 && i + r <= rows - 1 && j - 1 >= 0)
+				{
+					belowB = grid[i + r][j - 1];
+				}
+
+				if (i + 1 < rows && grid[i + 1][j] == 0)							  // check for cells below within the bounds of grid
+				{
+					nextgrid[i][j] = 0;
+					nextgrid[i + 1][j] = 1;
+				}
+				else if (i + 1 < rows && belowA == 0 && j + 1 < cols)
+				{
+					nextgrid[i + 1][j + 1] = 1;
+				}
+				else if (i + 1 < rows && belowB == 0 && j - 1 >= 0)
+				{
+					nextgrid[i + 1][j - 1] = 1;
 				}
 			}
 		}
