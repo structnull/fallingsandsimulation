@@ -24,13 +24,6 @@ void initializeGrid()
 
 void drawGrid()
 {
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
-		{
-			nextgrid[i][j] = grid[i][j];
-		}
-	}
 
 	for (int i = 0; i < rows; i++)
 	{
@@ -54,17 +47,18 @@ void drawGrid()
 						}
 						else if (belowA == 0)
 						{
-							nextgrid[i][j + 1] = 1;
+							nextgrid[i + 1][j + 1] = 1;
 						}
 						else if (belowB == 0)
 						{
-							nextgrid[i][j - 1] = 1;
+							nextgrid[i + 1][j - 1] = 1;
 						}
 					}
 				}
 			}
 		}
 	}
+
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
