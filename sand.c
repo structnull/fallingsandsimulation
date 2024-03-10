@@ -1,12 +1,13 @@
 #include <raylib.h>
-#include <stdlib.h>
 
 #define sWidth 800
 #define sHeight 800
-#define cellSize 3
+#define cellSize 10
 
 #define rows (sHeight / cellSize)
 #define cols (sWidth / cellSize)
+
+// #define gravity 0.1 gravity impl
 
 int grid[rows][cols];
 int nextgrid[rows][cols];
@@ -25,42 +26,40 @@ void initializeGrid()
 
 void drawGrid()
 {
-
-	for (int i = 0; i < rows; i++)
+	for (int i = rows - 1; i >= 0; i--)
 	{
 		for (int j = 0; j < cols; j++)
 		{
-			int state = grid[i][j];
-			if (state == 1)
+			if (grid[i][j] == 1)
 			{
-				// Initialize belowA and belowB
-				int belowA = 0, belowB = 0;
-				int r = 1;
-				if (rand() % 100 + 1 < 50)
+				int belowA = 0, belowB = 0, below = 0;
+				if (i + 1 < rows)
 				{
-					r *= -1;
-				}
-				if (i + r >= 0 && i + r <= rows - 1 && j + 1 < cols)
-				{
-					belowA = grid[i + r][j + 1];
-				}
-				if (i + r >= 0 && i + r <= rows - 1 && j - 1 >= 0)
-				{
-					belowB = grid[i + r][j - 1];
+					if (j - 1 >= 0)
+						belowA = grid[i + 1][j - 1];
+					if (j + 1 < cols)
+						belowB = grid[i + 1][j + 1];
+					below = grid[i + 1][j];
 				}
 
-				if (i + 1 < rows && grid[i + 1][j] == 0)							  // check for cells below within the bounds of grid
+				if (i + 1 < rows && below == 0)
 				{
 					nextgrid[i][j] = 0;
 					nextgrid[i + 1][j] = 1;
 				}
-				else if (i + 1 < rows && belowA == 0 && j + 1 < cols)
+				else if (i + 1 < rows && belowA == 0 && j - 1 >= 0)
 				{
+					nextgrid[i][j] = 0;
+					nextgrid[i + 1][j - 1] = 1;
+				}
+				else if (i + 1 < rows && belowB == 0 && j + 1 < cols)
+				{
+					nextgrid[i][j] = 0;
 					nextgrid[i + 1][j + 1] = 1;
 				}
-				else if (i + 1 < rows && belowB == 0 && j - 1 >= 0)
+				else
 				{
-					nextgrid[i + 1][j - 1] = 1;
+					nextgrid[i][j] = 1;
 				}
 			}
 		}
@@ -71,6 +70,7 @@ void drawGrid()
 		for (int j = 0; j < cols; j++)
 		{
 			grid[i][j] = nextgrid[i][j];
+			nextgrid[i][j] = 0;
 		}
 	}
 
