@@ -8,8 +8,6 @@
 #define rows (sHeight / cellSize)
 #define cols (sWidth / cellSize)
 
-// #define gravity 0.1 gravity impl
-
 int grid[rows][cols];
 int nextgrid[rows][cols];
 
@@ -95,7 +93,7 @@ void handleMouseInput()
 		Vector2 pos = GetMousePosition();
 		int x = pos.x / cellSize;
 		int y = pos.y / cellSize;
-		int range = 3;
+		int range = 2;
 
 		for (int dy = -range; dy <= range; ++dy)
 		{
