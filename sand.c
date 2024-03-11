@@ -1,8 +1,9 @@
 #include <raylib.h>
+#include <stdlib.h>
 
 #define sWidth 800
 #define sHeight 800
-#define cellSize 10
+#define cellSize 5
 
 #define rows (sHeight / cellSize)
 #define cols (sWidth / cellSize)
@@ -91,12 +92,29 @@ void handleMouseInput()
 {
 	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
 	{
-		Vector2 mousePosition = GetMousePosition();
-		int gridX = mousePosition.x / cellSize;
-		int gridY = mousePosition.y / cellSize;
-		if (gridX >= 0 && gridX < cols && gridY >= 0 && gridY < rows)
+		Vector2 pos = GetMousePosition();
+		int x = pos.x / cellSize;
+		int y = pos.y / cellSize;
+		int range = 3;
+
+		for (int dy = -range; dy <= range; ++dy)
 		{
-			grid[gridY][gridX] = 1;
+			for (int dx = -range; dx <= range; ++dx)
+			{
+				int nx = x + dx;
+				int ny = y + dy;
+
+				int offsetX = rand() % (range * 2 + 1) - range;
+				int offsetY = rand() % (range * 2 + 1) - range;
+
+				nx += offsetX;
+				ny += offsetY;
+
+				if (nx >= 0 && nx < cols && ny >= 0 && ny < rows)
+				{
+					grid[ny][nx] = 1;
+				}
+			}
 		}
 	}
 }
