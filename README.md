@@ -2,6 +2,9 @@
 
 This is a simple Falling Sand Simulator built using C and the Raylib library.
 
+
+![Untitled1-ezgif com-optimize](https://github.com/chiefdinkan/fallingsandsimulation/assets/87846149/773747f6-25a9-48f9-966c-3b9bafa50140)
+
 ## Todo
 - [x] add more sophicated interaction between particles.
 - [] add real physics interaction.
