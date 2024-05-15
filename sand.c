@@ -3,8 +3,8 @@
 
 #define cellSize 5
 
-int** grid;
-int** nextgrid;
+int* grid;
+int* nextgrid;
 int rows, cols;
 
 void initializeGrid(int screenWidth, int screenHeight)
@@ -12,64 +12,45 @@ void initializeGrid(int screenWidth, int screenHeight)
     rows = screenHeight / cellSize;
     cols = screenWidth / cellSize;
 
-    // Allocating  memory for grids
-    grid = (int**)malloc(rows * sizeof(int*));
-    nextgrid = (int**)malloc(rows * sizeof(int*));
-    for (int i = 0; i < rows; i++)
+    // Allocate memory for grids
+    grid = (int*)malloc(rows * cols * sizeof(int));
+    nextgrid = (int*)malloc(rows * cols * sizeof(int));
+    for (int i = 0; i < rows * cols; i++)
     {
-        grid[i] = (int*)malloc(cols * sizeof(int));
-        nextgrid[i] = (int*)malloc(cols * sizeof(int));
-        for (int j = 0; j < cols; j++)
-        {
-            grid[i][j] = 0;
-            nextgrid[i][j] = 0;
-        }
+        grid[i] = 0;
+        nextgrid[i] = 0;
     }
 }
 
 void freeGrid()
 {
-    for (int i = 0; i < rows; i++)
-    {
-        free(grid[i]);
-        free(nextgrid[i]);
-    }
     free(grid);
     free(nextgrid);
 }
 
 void resizeGrid(int newCols, int newRows)
 {
-    int** newGrid = (int**)malloc(newRows * sizeof(int*));
-    int** newNextgrid = (int**)malloc(newRows * sizeof(int*));
-    for (int i = 0; i < newRows; i++)
-    {
-        newGrid[i] = (int*)malloc(newCols * sizeof(int));
-        newNextgrid[i] = (int*)malloc(newCols * sizeof(int));
-        for (int j = 0; j < newCols; j++)
-        {
-            newGrid[i][j] = 0;
-            newNextgrid[i][j] = 0;
-        }
-    }
-
-    float rowScale = (float)rows / newRows;
-    float colScale = (float)cols / newCols;
+    int* newGrid = (int*)malloc(newRows * newCols * sizeof(int));
+    int* newNextgrid = (int*)malloc(newRows * newCols * sizeof(int));
 
     for (int i = 0; i < newRows; i++)
     {
         for (int j = 0; j < newCols; j++)
         {
-            int oldI = i * rowScale;
-            int oldJ = j * colScale;
-            if (oldI < rows && oldJ < cols)
+            if (i < rows && j < cols)
             {
-                newGrid[i][j] = grid[oldI][oldJ];
+                newGrid[i * newCols + j] = grid[i * cols + j];
             }
+            else
+            {
+                newGrid[i * newCols + j] = 0;
+            }
+            newNextgrid[i * newCols + j] = 0;
         }
     }
 
-    freeGrid();
+    free(grid);
+    free(nextgrid);
 
     grid = newGrid;
     nextgrid = newNextgrid;
@@ -83,48 +64,45 @@ void drawGrid()
     {
         for (int j = 0; j < cols; j++)
         {
-            if (grid[i][j] == 1)
+            if (grid[i * cols + j] == 1)
             {
                 int belowA = 0, belowB = 0, below = 0;
                 if (i + 1 < rows)
                 {
                     if (j - 1 >= 0)
-                        belowA = grid[i + 1][j - 1];
+                        belowA = grid[(i + 1) * cols + (j - 1)];
                     if (j + 1 < cols)
-                        belowB = grid[i + 1][j + 1];
-                    below = grid[i + 1][j];
+                        belowB = grid[(i + 1) * cols + (j + 1)];
+                    below = grid[(i + 1) * cols + j];
                 }
 
                 if (i + 1 < rows && below == 0)
                 {
-                    nextgrid[i][j] = 0;
-                    nextgrid[i + 1][j] = 1;
+                    nextgrid[i * cols + j] = 0;
+                    nextgrid[(i + 1) * cols + j] = 1;
                 }
                 else if (i + 1 < rows && belowA == 0 && j - 1 >= 0)
                 {
-                    nextgrid[i][j] = 0;
-                    nextgrid[i + 1][j - 1] = 1;
+                    nextgrid[i * cols + j] = 0;
+                    nextgrid[(i + 1) * cols + (j - 1)] = 1;
                 }
                 else if (i + 1 < rows && belowB == 0 && j + 1 < cols)
                 {
-                    nextgrid[i][j] = 0;
-                    nextgrid[i + 1][j + 1] = 1;
+                    nextgrid[i * cols + j] = 0;
+                    nextgrid[(i + 1) * cols + (j + 1)] = 1;
                 }
                 else
                 {
-                    nextgrid[i][j] = 1;
+                    nextgrid[i * cols + j] = 1;
                 }
             }
         }
     }
 
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < rows * cols; i++)
     {
-        for (int j = 0; j < cols; j++)
-        {
-            grid[i][j] = nextgrid[i][j];
-            nextgrid[i][j] = 0;
-        }
+        grid[i] = nextgrid[i];
+        nextgrid[i] = 0;
     }
 
     for (int i = 0; i < rows; i++)
@@ -132,9 +110,9 @@ void drawGrid()
         for (int j = 0; j < cols; j++)
         {
             Rectangle cell = {j * cellSize, i * cellSize, cellSize, cellSize};
-            if (grid[i][j] == 0)
+            if (grid[i * cols + j] == 0)
                 DrawRectangle(cell.x, cell.y, cell.width, cell.height, BLACK);
-            else if (grid[i][j] == 1)
+            else if (grid[i * cols + j] == 1)
                 DrawRectangle(cell.x, cell.y, cell.width, cell.height, YELLOW);
         }
     }
@@ -164,7 +142,7 @@ void handleMouseInput()
 
                 if (nx >= 0 && nx < cols && ny >= 0 && ny < rows)
                 {
-                    grid[ny][nx] = 1;
+                    grid[ny * cols + nx] = 1;
                 }
             }
         }
@@ -174,7 +152,7 @@ void handleMouseInput()
 int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(800, 800, "Falling sand simulator"); 
+    InitWindow(800, 800, "Falling sand simulator");
     SetTargetFPS(60);
 
     initializeGrid(GetScreenWidth(), GetScreenHeight());
